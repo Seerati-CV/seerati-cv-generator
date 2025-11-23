@@ -511,7 +511,11 @@
                         </div>
                         <div class="form-group">
                             <label>Languages (Optional)</label>
-                            <input type="text" id="languages" name="languages" placeholder="e.g., Arabic (Native), English (Fluent)">
+                            <textarea id="languages" name="languages" placeholder="e.g., Arabic (Native)&#10;English (Fluent)&#10;Spanish (Intermediate)" style="min-height: 80px;"></textarea>
+                            <div class="help-text">
+                                <span class="help-icon">💡</span>
+                                <span>Press Enter to add each language on a new line</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -657,6 +661,34 @@
                         responsibilities: form.querySelector(`[name="jobResponsibilities${i}"]`).value.trim()
                     });
                 }
+            }
+
+            // Validation: Check if at least one job is filled
+            if (formData.jobs.length === 0) {
+                messageDiv.className = 'message error';
+                messageDiv.innerHTML = `
+                    <strong>✗ Missing Work Experience</strong><br>
+                    Please add at least one work experience before generating your CV.
+                `;
+                messageDiv.style.display = 'block';
+                messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return;
+            }
+
+            // Confirmation dialog
+            const confirmMessage = `
+Ready to generate your CV?
+
+Name: ${formData.fullName}
+Email: ${formData.email}
+Order ID: ${formData.orderId}
+Work Experiences: ${formData.jobs.length}
+
+Click OK to generate your CV, or Cancel to review your information.
+            `.trim();
+
+            if (!confirm(confirmMessage)) {
+                return; // User cancelled
             }
 
             // Show loading
